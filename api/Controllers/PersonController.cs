@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using db.Models;
+using api.Models;
 
-namespace db.Controllers
+namespace api.Controllers
 {
     [Route("api/[controller]")]
     public class PersonController : ControllerBase

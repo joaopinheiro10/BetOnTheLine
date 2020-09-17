@@ -3,9 +3,9 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using MySqlConnector;
-using db.Models;
+using api.Models;
 
-namespace db
+namespace api
 {
     public class PersonQuery
     {

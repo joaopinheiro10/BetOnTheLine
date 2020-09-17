@@ -2,7 +2,7 @@ using System.Data;
 using System.Threading.Tasks;
 using MySqlConnector;
 
-namespace db.Models
+namespace api.Models
 {
     public class Person
     {
