@@ -1,14 +1,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using blogPostApi;
-using blogPostAPI.Models;
+using db.Models;
 
-namespace blogPostAPI.Controllers
+namespace db.Controllers
 {
     [Route("api/[controller]")]
-    public class BlogController : ControllerBase
+    public class PersonController : ControllerBase
     {
-        public BlogController(AppDb db)
+        public PersonController(AppDb db)
         {
             Db = db;
         }
@@ -18,7 +17,7 @@ namespace blogPostAPI.Controllers
         public async Task<IActionResult> GetLatest()
         {
             await Db.Connection.OpenAsync();
-            var query = new BlogPostQuery(Db);
+            var query = new PersonQuery(Db);
             var result = await query.LatestPostsAsync();
             return new OkObjectResult(result);
         }
@@ -28,7 +27,7 @@ namespace blogPostAPI.Controllers
         public async Task<IActionResult> GetOne(int id)
         {
             await Db.Connection.OpenAsync();
-            var query = new BlogPostQuery(Db);
+            var query = new PersonQuery(Db);
             var result = await query.FindOneAsync(id);
             if (result is null)
                 return new NotFoundResult();
@@ -37,7 +36,7 @@ namespace blogPostAPI.Controllers
 
         // POST api/blog
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]BlogPost body)
+        public async Task<IActionResult> Post([FromBody]Person body)
         {
             await Db.Connection.OpenAsync();
             body.Db = Db;
@@ -47,10 +46,10 @@ namespace blogPostAPI.Controllers
 
         // PUT api/blog/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOne(int id, [FromBody]BlogPost body)
+        public async Task<IActionResult> PutOne(int id, [FromBody]Person body)
         {
             await Db.Connection.OpenAsync();
-            var query = new BlogPostQuery(Db);
+            var query = new PersonQuery(Db);
             var result = await query.FindOneAsync(id);
             if (result is null)
                 return new NotFoundResult();
@@ -59,18 +58,16 @@ namespace blogPostAPI.Controllers
             result.username = body.username;
             result.email = body.email;
             result.password = body.password;
-
-
             await result.UpdateAsync();
             return new OkObjectResult(result);
-        } 
+        }
 
         // DELETE api/blog/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOne(int id)
         {
             await Db.Connection.OpenAsync();
-            var query = new BlogPostQuery(Db);
+            var query = new PersonQuery(Db);
             var result = await query.FindOneAsync(id);
             if (result is null)
                 return new NotFoundResult();
@@ -83,7 +80,7 @@ namespace blogPostAPI.Controllers
         public async Task<IActionResult> DeleteAll()
         {
             await Db.Connection.OpenAsync();
-            var query = new BlogPostQuery(Db);
+            var query = new PersonQuery(Db);
             await query.DeleteAllAsync();
             return new OkResult();
         }

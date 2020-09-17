@@ -1,7 +1,7 @@
 using System;
 using MySqlConnector;
 
-namespace blogPostApi
+namespace db
 {
     public class AppDb : IDisposable
     {

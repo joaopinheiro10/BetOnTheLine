@@ -1,11 +1,10 @@
 using System.Data;
 using System.Threading.Tasks;
 using MySqlConnector;
-using blogPostApi;
 
-namespace blogPostAPI.Models
+namespace db.Models
 {
-    public class BlogPost
+    public class Person
     {
 
          public int Id { get; set; }
@@ -19,14 +18,14 @@ namespace blogPostAPI.Models
         public string email { get; set; }
 
         public string password { get; set; }
-        
+
         internal AppDb Db { get; set; }
 
-        public BlogPost()
+        public Person()
         {
         }
 
-        internal BlogPost(AppDb db)
+        internal Person(AppDb db)
         {
             Db = db;
         }
@@ -34,7 +33,8 @@ namespace blogPostAPI.Models
         public async Task InsertAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO `Blogpost` (`firstName`, `lastName`,`username`,`email`,`password`) VALUES (@firstName, @lastName, @username, @email, @password);";
+            cmd.CommandText = @"INSERT INTO `person` (`firstName`, `lastName`,`username`,`email`,`password`) VALUES (@firstName, @lastName, @username, @email, MD5(@password));";
+            //cmd.CommandText = @"INSERT INTO `person` (`Title`, `Content`) VALUES (@title, @content);";
             BindParams(cmd);
             await cmd.ExecuteNonQueryAsync();
             Id = (int) cmd.LastInsertedId;
@@ -43,7 +43,8 @@ namespace blogPostAPI.Models
         public async Task UpdateAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"UPDATE `Blogpost` SET `firstName` = @firstName, `lastName` = @lastname, `username` = @username, `email` = @email, `password` = @firstName  WHERE `Id` = @id;";
+            cmd.CommandText = @"UPDATE `person` SET `firstName` = @firstName, `lastName` = @lastname, `username` = @username, `email` = @email, `password` = @firstName  WHERE `Id` = @id;";
+            //cmd.CommandText = @"UPDATE `person` SET `Title` = @title, `Content` = @content WHERE `Id` = @id;";
             BindParams(cmd);
             BindId(cmd);
             await cmd.ExecuteNonQueryAsync();
@@ -52,7 +53,8 @@ namespace blogPostAPI.Models
         public async Task DeleteAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"DELETE FROM `BlogPost` WHERE `Id` = @id;";
+            cmd.CommandText = @"DELETE FROM `person` WHERE `Id` = @id;";
+            //cmd.CommandText = @"DELETE FROM `person` WHERE `Id` = @id;";
             BindId(cmd);
             await cmd.ExecuteNonQueryAsync();
         }
@@ -99,6 +101,18 @@ namespace blogPostAPI.Models
                 DbType = DbType.String,
                 Value = password,
             });
+            /*cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@title",
+                DbType = DbType.String,
+                Value = Title,
+            });
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@content",
+                DbType = DbType.String,
+                Value = Content,
+            });*/
         }
     }
 }

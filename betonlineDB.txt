@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS person (
+  Id INT NOT NULL AUTO_INCREMENT,
+  firstName LONGTEXT CHARSET utf8mb4,
+  lastName LONGTEXT CHARSET utf8mb4,
+  username LONGTEXT CHARSET utf8mb4,
+  email LONGTEXT CHARSET utf8mb4,
+  password LONGTEXT CHARSET utf8mb4,
+  PRIMARY KEY (Id)
+) ENGINE=InnoDB;    
+
+CREATE TABLE IF NOT EXISTS football_match(
+  Id INT NOT NULL AUTO_INCREMENT,
+  home_team LONGTEXT CHARSET utf8mb4,
+  away_team LONGTEXT CHARSET utf8mb4,
+  PRIMARY KEY (Id)
+) ENGINE=InnoDB; 
+
+CREATE TABLE IF NOT EXISTS tip(
+  Id INT NOT NULL AUTO_INCREMENT,
+  tip INT NOT NULL,
+  message LONGTEXT CHARSET utf8mb4,
+  gameId INT,
+  userId INT,
+  PRIMARY KEY (Id),
+  FOREIGN KEY (gameId) REFERENCES football_match(Id),
+  FOREIGN KEY (userId) REFERENCES person(Id)
+) ENGINE=InnoDB;
