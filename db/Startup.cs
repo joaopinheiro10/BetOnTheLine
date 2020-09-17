@@ -10,11 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Swagger;
-using db.Services;
+using blogPostAPI;
+using blogPostApi;
 
-
-namespace db
+namespace blogPostAPI
 {
     public class Startup
     {
@@ -28,42 +27,28 @@ namespace db
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllers();
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddMvc(option => option.EnableEndpointRouting = false);
-
-            services.AddSwaggerGen(c =>
-            { 
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1"});
-            });
-
-            services.AddScoped<IPersonService>(factory => {
-                return new PersonService(Configuration.GetConnectionString("MysqlConnection"));
-            });
+            services.AddControllers();
+            services.AddTransient<AppDb>(_ => new AppDb(Configuration["ConnectionStrings:DefaultConnection"]));
         }
 
-    
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
-            
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else {
 
-            app.UseHsts();
-            }
+            app.UseHttpsRedirection();
 
-            app.UseSwagger();
+            app.UseRouting();
 
-            app.UseSwaggerUI(c => {
+            app.UseAuthorization();
 
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API .Net Core and VS Code");
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
-        
-            app.UseMvc();
         }
     }
 }
